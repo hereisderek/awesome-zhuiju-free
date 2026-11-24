@@ -1,0 +1,10 @@
+name: JIT pool test
+on: workflow_dispatch
+jobs:
+  a: &job
+    runs-on: [self-hosted, proxmox-jit]
+    steps:
+      - run: |
+          echo "job=${{ github.job }} host=$(hostname) user=$(whoami) dir=$PWD"
+          date -u +%T; touch "$RUNNER_WORKSPACE/leftover-${{ github.job }}"; sleep 20; date -u +%T
+  b: *job
