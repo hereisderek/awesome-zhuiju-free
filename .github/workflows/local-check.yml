@@ -1,8 +1,10 @@
 name: Local availability check
 
 # Runs on the home Proxmox runner so results reflect the home (NZ) network.
-# Reads upstream directly; `main` of this fork is a pure mirror updated only by the "Sync fork" button
-# (ruleset: only repo admin may update it).
+# `sync` fast-forwards this fork's `main` to upstream (pure mirror, never committed to; ruleset blocks
+# force-push/delete). Pushes by the default token don't trigger upstream's workflows. If upstream changed
+# its own .github/workflows the default token is refused: set secret SYNC_TOKEN (PAT, `workflow` scope).
+# The check reads upstream directly, so it still runs when the sync fails.
 on:
   schedule:
     - cron: "30 3 * * *"
@@ -16,6 +18,15 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  sync:
+    name: Sync main from upstream
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - env:
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN || github.token }}
+        run: gh api -X POST "repos/${GITHUB_REPOSITORY}/merge-upstream" -f branch=main --jq '.message'
+
   quiet:
     name: Keep upstream's workflows disabled in this fork
     runs-on: ubuntu-latest
@@ -31,6 +42,8 @@ jobs:
 
   check:
     name: Check from home network
+    needs: [sync, quiet]
+    if: ${{ !cancelled() }}
     runs-on: [self-hosted, proxmox-nz]
     steps:
       - uses: actions/checkout@v6
