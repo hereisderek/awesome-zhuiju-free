@@ -1,7 +1,8 @@
 name: Local availability check
 
 # Runs on the home Proxmox runner so results reflect the home (NZ) network.
-# Never commits to `upstream` (pure mirror of laoma528/awesome-zhuiju-free main).
+# Reads upstream directly; `main` of this fork is a pure mirror updated only by the "Sync fork" button
+# (ruleset: only repo admin may update it).
 on:
   schedule:
     - cron: "30 3 * * *"
@@ -14,28 +15,22 @@ concurrency:
   group: local-check
   cancel-in-progress: false
 
-env:
-  UPSTREAM: https://github.com/laoma528/awesome-zhuiju-free.git
-
 jobs:
-  sync:
-    name: Mirror upstream main -> upstream branch
+  quiet:
+    name: Keep upstream's workflows disabled in this fork
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
     steps:
-      - name: Fast-forward mirror
-        env:
-          # PAT with `workflow` scope is needed when upstream touches .github/workflows;
-          # otherwise the default token is enough.
-          TOKEN: ${{ secrets.SYNC_TOKEN || github.token }}
+      - env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git init -q mirror && cd mirror
-          git fetch -q --depth=1 "$UPSTREAM" main
-          # No --force: a non-fast-forward means someone committed to the mirror; fail loudly.
-          git push "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" FETCH_HEAD:refs/heads/upstream
+          gh api "repos/${GITHUB_REPOSITORY}/actions/workflows" --paginate \
+            --jq '.workflows[] | select(.state=="active") | select(.path|startswith(".github/workflows/")) | select(.path != ".github/workflows/local-check.yml") | .id' \
+            | while read -r id; do gh workflow disable "$id" && echo "disabled $id"; done
 
   check:
     name: Check from home network
-    needs: sync
     runs-on: [self-hosted, proxmox-nz]
     steps:
       - uses: actions/checkout@v6
@@ -43,7 +38,8 @@ jobs:
           path: local
       - uses: actions/checkout@v6
         with:
-          ref: upstream
+          repository: laoma528/awesome-zhuiju-free
+          ref: main
           path: src
           persist-credentials: false
       - uses: actions/checkout@v6

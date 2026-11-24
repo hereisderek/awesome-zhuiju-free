@@ -66,14 +66,14 @@ await writeFile(`${a["out-reports"]}/index.html`, html);
 // README on the default branch: upstream README (status markers now hold home-network results)
 // with relative links rewritten to the mirror branch, plus a short banner.
 const [owner] = a.repo.split("/");
-const base = `https://github.com/${a.repo}/blob/upstream/`;
+const base = `https://github.com/${a.repo}/blob/main/`;
 const readme = (await readFile(a.readme, "utf8"))
   .replace(/\]\((?!https?:|#|<)([^)\s]+)\)/g, (_, p) => `](${base}${p.replace(/^\.\//, "")})`)
   .replace(/\]\(.*?reports\/availability\.json\)/, `](https://github.com/${a.repo}/blob/reports/availability.json)`);
 const banner = `> **Home-network fork.** Status columns below were checked from a home connection in NZ on ${when.slice(0, 10)}
 > (upstream commit \`${a["upstream-sha"]}\`). [Full report](https://github.com/${a.repo}/blob/reports/report.md) ·
 > [Pages](https://${owner}.github.io/${a.repo.split("/")[1]}/) · upstream: [laoma528/awesome-zhuiju-free](https://github.com/laoma528/awesome-zhuiju-free).
-> Branches: \`upstream\` = untouched mirror, \`local\` (default) = this README + workflow, \`reports\` = results.
+> Branches: \`main\` = untouched upstream mirror (Sync fork), \`local\` (default) = this README + workflow, \`reports\` = results.
 
 `;
 await writeFile(a["out-readme"], banner + readme);
