@@ -1,7 +1,7 @@
 > **Home-network fork.** Status columns below were checked from a home connection in NZ on 2026-11-24
 > (upstream commit `e4a8362`). [Full report](https://github.com/hereisderek/awesome-zhuiju-free/blob/reports/report.md) ·
 > [Pages](https://hereisderek.github.io/awesome-zhuiju-free/) · upstream: [laoma528/awesome-zhuiju-free](https://github.com/laoma528/awesome-zhuiju-free).
-> Branches: `upstream` = untouched mirror, `local` (default) = this README + workflow, `reports` = results.
+> Branches: `main` = untouched upstream mirror (Sync fork), `local` (default) = this README + workflow, `reports` = results.
 
 <div align="center">
 
@@ -93,7 +93,7 @@
 <details>
 <summary><strong>查看自动检测状态说明</strong></summary>
 
-精选内容来自 [`resources/resources.json`](https://github.com/hereisderek/awesome-zhuiju-free/blob/upstream/resources/resources.json)。状态由 GitHub Actions 每日自动检测：`🟢 可访问`、`🟡 访问受限`、`🔴 无法访问`、`⚪ 未检测`。检测结果仅代表 GitHub Actions 节点当时的网络情况。
+精选内容来自 [`resources/resources.json`](https://github.com/hereisderek/awesome-zhuiju-free/blob/main/resources/resources.json)。状态由 GitHub Actions 每日自动检测：`🟢 可访问`、`🟡 访问受限`、`🔴 无法访问`、`⚪ 未检测`。检测结果仅代表 GitHub Actions 节点当时的网络情况。
 
 状态只判断主页是否响应，不替代完整体验评价。完整检测结果见 [`reports/availability.json`](https://github.com/hereisderek/awesome-zhuiju-free/blob/reports/availability.json)。
 
@@ -377,7 +377,7 @@ _等待首条通过验证的精选资源。你可以 [推荐一个资源](https:
 
 ## 怎么看评分
 
-首页精选榜单使用 1 至 5 颗 `🌟` 展示推荐指数。推荐指数由「多、快、净、稳」四项体验评分平均后四舍五入得到，方便快速判断；完整结构化评分仍保存在 [`resources/resources.json`](https://github.com/hereisderek/awesome-zhuiju-free/blob/upstream/resources/resources.json)。
+首页精选榜单使用 1 至 5 颗 `🌟` 展示推荐指数。推荐指数由「多、快、净、稳」四项体验评分平均后四舍五入得到，方便快速判断；完整结构化评分仍保存在 [`resources/resources.json`](https://github.com/hereisderek/awesome-zhuiju-free/blob/main/resources/resources.json)。
 
 | 维度 | 你可以这样理解 |
 | --- | --- |
@@ -386,7 +386,7 @@ _等待首条通过验证的精选资源。你可以 [推荐一个资源](https:
 | **净** | 广告、弹窗、跳转和诱导下载少不少，越高越干净 |
 | **稳** | 能否长期访问，域名与服务是否稳定 |
 
-风险分为版权、安全、隐私和支付四类，并使用 `低 / 中 / 高 / 未知` 标记。详细规则见 [贡献指南](https://github.com/hereisderek/awesome-zhuiju-free/blob/upstream/CONTRIBUTING.md)。
+风险分为版权、安全、隐私和支付四类，并使用 `低 / 中 / 高 / 未知` 标记。详细规则见 [贡献指南](https://github.com/hereisderek/awesome-zhuiju-free/blob/main/CONTRIBUTING.md)。
 
 ## 我们怎么维护
 
@@ -408,14 +408,14 @@ _等待首条通过验证的精选资源。你可以 [推荐一个资源](https:
 | 推荐一个新资源 | [创建资源推荐](https://github.com/laoma528/awesome-zhuiju-free/issues/new?template=resource.yml) |
 | 报告失效、风险或评分变化 | [创建问题报告](https://github.com/laoma528/awesome-zhuiju-free/issues/new?template=broken-link.yml) |
 | 请求修改或移除收录 | [提交权利人请求](https://github.com/laoma528/awesome-zhuiju-free/issues/new?template=rights-holder-request.yml) |
-| 直接维护结构化数据 | 阅读 [贡献指南](https://github.com/hereisderek/awesome-zhuiju-free/blob/upstream/CONTRIBUTING.md) 与 [数据字段说明](https://github.com/hereisderek/awesome-zhuiju-free/blob/upstream/resources/README.md) |
-| 管理 Issue、候选资源和自动更新 | 阅读 [管理员手册](https://github.com/hereisderek/awesome-zhuiju-free/blob/upstream/MAINTAINERS.md) |
+| 直接维护结构化数据 | 阅读 [贡献指南](https://github.com/hereisderek/awesome-zhuiju-free/blob/main/CONTRIBUTING.md) 与 [数据字段说明](https://github.com/hereisderek/awesome-zhuiju-free/blob/main/resources/README.md) |
+| 管理 Issue、候选资源和自动更新 | 阅读 [管理员手册](https://github.com/hereisderek/awesome-zhuiju-free/blob/main/MAINTAINERS.md) |
 
 所有资源变更都经过自动数据校验，并保留验证与投诉处理记录：
 
-- [`resources/resources.json`](https://github.com/hereisderek/awesome-zhuiju-free/blob/upstream/resources/resources.json)：全部资源主数据
-- [`reports/verifications.json`](https://github.com/hereisderek/awesome-zhuiju-free/blob/upstream/reports/verifications.json)：历史验证记录
-- [`reports/notices.json`](https://github.com/hereisderek/awesome-zhuiju-free/blob/upstream/reports/notices.json)：投诉与处理记录
+- [`resources/resources.json`](https://github.com/hereisderek/awesome-zhuiju-free/blob/main/resources/resources.json)：全部资源主数据
+- [`reports/verifications.json`](https://github.com/hereisderek/awesome-zhuiju-free/blob/main/reports/verifications.json)：历史验证记录
+- [`reports/notices.json`](https://github.com/hereisderek/awesome-zhuiju-free/blob/main/reports/notices.json)：投诉与处理记录
 
 ## 社区贡献者
 
@@ -517,7 +517,7 @@ _等待首条通过验证的精选资源。你可以 [推荐一个资源](https:
 
 ## 开源协议
 
-本项目采用 [CC BY 4.0](https://github.com/hereisderek/awesome-zhuiju-free/blob/upstream/LICENSE) 授权。你可以在保留署名与许可说明的前提下自由分享、修改与再分发。
+本项目采用 [CC BY 4.0](https://github.com/hereisderek/awesome-zhuiju-free/blob/main/LICENSE) 授权。你可以在保留署名与许可说明的前提下自由分享、修改与再分发。
 
 ## 友情链接
 
