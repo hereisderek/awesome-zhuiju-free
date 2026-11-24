@@ -1,0 +1,89 @@
+name: Local availability check
+
+# Runs on the home Proxmox runner so results reflect the home (NZ) network.
+# Never commits to `upstream` (pure mirror of laoma528/awesome-zhuiju-free main).
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: local-check
+  cancel-in-progress: false
+
+env:
+  UPSTREAM: https://github.com/laoma528/awesome-zhuiju-free.git
+
+jobs:
+  sync:
+    name: Mirror upstream main -> upstream branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fast-forward mirror
+        env:
+          # PAT with `workflow` scope is needed when upstream touches .github/workflows;
+          # otherwise the default token is enough.
+          TOKEN: ${{ secrets.SYNC_TOKEN || github.token }}
+        run: |
+          git init -q mirror && cd mirror
+          git fetch -q --depth=1 "$UPSTREAM" main
+          # No --force: a non-fast-forward means someone committed to the mirror; fail loudly.
+          git push "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" FETCH_HEAD:refs/heads/upstream
+
+  check:
+    name: Check from home network
+    needs: sync
+    runs-on: [self-hosted, proxmox-nz]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          path: local
+      - uses: actions/checkout@v6
+        with:
+          ref: upstream
+          path: src
+          persist-credentials: false
+      - uses: actions/checkout@v6
+        with:
+          ref: reports
+          path: reports
+
+      - name: Run upstream checker unmodified
+        working-directory: src
+        env:
+          CHECK_TIME_ZONE: Pacific/Auckland
+        run: |
+          cp reports/availability.json "$GITHUB_WORKSPACE/github-availability.json"
+          node scripts/sync-readme.mjs
+          node scripts/check-availability.mjs
+
+      - name: Render report
+        run: |
+          node local/scripts/render-report.mjs \
+            --local src/reports/availability.json \
+            --github github-availability.json \
+            --resources src/resources/resources.json \
+            --readme src/README.md \
+            --out-reports reports \
+            --out-readme local/README.md \
+            --repo "$GITHUB_REPOSITORY" \
+            --upstream-sha "$(git -C src rev-parse --short HEAD)"
+
+      - name: Publish `reports` branch
+        working-directory: reports
+        run: |
+          git config user.name "home-runner[bot]"
+          git config user.email "home-runner@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || { git commit -qm "report: home network $(date -u +%F)"; git push; }
+
+      - name: Publish README on `local` branch
+        working-directory: local
+        run: |
+          git config user.name "home-runner[bot]"
+          git config user.email "home-runner@users.noreply.github.com"
+          git add README.md
+          git diff --cached --quiet || { git commit -qm "readme: home network $(date -u +%F)"; git push; }
